@@ -1,0 +1,37 @@
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { LoadingSpinner } from '@/core/components/LoadingSpinner';
+import AppLayout from '@/pages/layouts/AppLayout';
+
+const WelcomePage = lazy(() => import('@/pages/Welcome'));
+const NotFoundPage = lazy(() => import('@/pages/NotFound'));
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AppLayout />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <WelcomePage />
+          </Suspense>
+        ),
+      },
+      // Feature routes will be added here
+    ],
+  },
+  {
+    path: '*',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <NotFoundPage />
+      </Suspense>
+    ),
+  },
+]);
+
+export const AppRouter = () => {
+  return <RouterProvider router={router} />;
+};
